@@ -1,34 +1,24 @@
 {
   "name": "ltc/advancedtemplatehints",
-  "description": "",
+  "description": "Ltc_AdvancedTemplateHints is a module for Magento 2 that extends the default \"Template Hints\" feature.",
   "require": {
     "php": "~5.5.0|~5.6.0",
     "magento/module-developer": "100.0.2",
-
+    "magento/framework": "100.0.*",
     "magento/magento-composer-installer": "*"
-  },
-  "suggest": {
-
   },
   "type": "magento2-module",
   "version": "0.2.0",
   "license": [
-
+    "GPL-3.0"
   ],
   "autoload": {
-    "files": [
-      "registration.php"
-    ],
-    "psr-4": {
-      "Ltc\\AdvancedTemplateHints\\": ""
-    }
+    "files": ["registration.php"],
+    "psr-4": {"Ltc\\AdvancedTemplateHints\\": ""}
   },
   "extra": {
     "map": [
-      [
-        "*",
-        "Ltc/AdvancedTemplateHints"
-      ]
+      ["*","Ltc/AdvancedTemplateHints"]
     ]
   }
 }
