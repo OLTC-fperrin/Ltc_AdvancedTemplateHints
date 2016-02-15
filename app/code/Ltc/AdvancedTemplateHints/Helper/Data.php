@@ -8,14 +8,24 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
     const TYPE_NOTCACHED = 'notcached';
     const TYPE_IMPLICITLYCACHED = 'implicitlycached';
 
+    protected $layout;
+
+    public function __construct(\Magento\Framework\App\Helper\Context $context, \Magento\Framework\View\LayoutInterface $layout)
+    {
+        $this->layout = $layout;
+        parent::__construct($context);
+    }
+
     public function getBlockInfo(
         \Magento\Framework\View\Element\BlockInterface $block,
         $fullInfo = true
     ){
         $info = array(
             'name' => $block->getNameInLayout(),
-            'alias' => '', //TODO: Add block alia to list
+            'alias' => $this->layout->getElementAlias($block->getNameInLayout())
         );
+
+        $info['parent'] = $this->layout->getParentName($info['name']);
 
         if (!$fullInfo) {
             return $info;

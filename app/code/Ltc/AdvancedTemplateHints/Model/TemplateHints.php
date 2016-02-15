@@ -71,75 +71,13 @@ class TemplateHints implements \Magento\Framework\View\TemplateEngineInterface
                 <div id="tpl-hint-%1$s-infobox" style="display: none;">%5$s</div>
             </div>',
             $id,
-            $this->getHintClass() . ' ' . $blockInfo['cache-status'],
+            $this->helper->getHintClass() . ' ' . $blockInfo['cache-status'],
             $blockContent,
             $this->helper->renderTitle($blockInfo),
-            $this->renderBox($blockInfo, $path)
+            $this->helper->renderBox($blockInfo, $path)
         );
 
 
         return $wrappedHtml;
-    }
-
-    /**
-     * Get CSS class for the hint
-     *
-     * @return string
-     */
-    protected function getHintClass()
-    {
-        return 'tpl-hint tpl-hint-border';
-    }
-
-    /**
-     * Render box
-     *
-     * @param array $info
-     * @param array $path
-     * @return string
-     */
-    protected function renderBox(array $info, array $path) {
-
-        $output = '';
-        $output .= '<dl>';
-        $output .= $this->arrayToDtDd($info, array('name', 'alias'));
-        if (count($path) > 0) {
-            $output .= '<dt>'.__('Block nesting').':</dt><dd>';
-            $output .= '<ul class="path">';
-            foreach ($path as $step) {
-                $output .= '<li>'.$this->helper->renderTitle($step).'</li>';
-            }
-            $output .= '</ul>';
-            $output .= '</dd>';
-        }
-        $output .= '</dl>';
-        return $output;
-    }
-    /**
-     * Render array as <dl>
-     *
-     * @param array $array
-     * @param array $skipKeys
-     * @return string
-     */
-    protected function arrayToDtDd(array $array, array $skipKeys=array()) {
-        $output = '<dl>';
-        foreach ($array as $key => $value) {
-            if (in_array($key, $skipKeys)) {
-                continue;
-            }
-            if (is_array($value)) {
-                $value = $this->arrayToDtDd($value);
-            }
-            if (is_int($key)) {
-                $output .= $value . '<br />';
-            } else {
-                $output .= '<dt>'.ucfirst($key).':</dt><dd>';
-                $output .= $value;
-                $output .= '</dd>';
-            }
-        }
-        $output .= '</dl>';
-        return $output;
     }
 }
