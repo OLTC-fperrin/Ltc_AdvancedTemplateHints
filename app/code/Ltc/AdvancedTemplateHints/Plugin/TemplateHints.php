@@ -64,7 +64,10 @@ class TemplateHints {
         $this->_ath = filter_var($this->request->getParam('ath'), FILTER_VALIDATE_BOOLEAN);
 
         if($this->_ath && $this->devHelper->isDevAllowed()) {
+
             /** Adding Module Assets if ath=1 and is allowed */
+            /** Adding Opentip native script because not optimized for requirejs */
+
             $idOpentipCss = 'Ltc_AdvancedTemplateHints/css/opentip.css';
             $idCommonCss = 'Ltc_AdvancedTemplateHints/css/style.css';
             $idOpentipJs = 'Ltc_AdvancedTemplateHints/js/opentip-native.min.js';
@@ -77,19 +80,11 @@ class TemplateHints {
             $this->assetCollection->add('Ltc_AdvancedTemplateHints/css/style', $commonCss, ['type' => \Magento\Framework\UrlInterface::URL_TYPE_LINK, 'rel' => 'stylesheet', 'media' => 'all']);
             $this->assetCollection->add('Ltc_AdvancedTemplateHints/js/opentip', $opentipJs, ['type' => \Magento\Framework\UrlInterface::URL_TYPE_JS]);
 
-            /** @var Adding block with main script */
-            $scriptBlock = $this->objectManager->create('\Magento\Framework\View\Element\Template');
+            /** Removed for proper javascript module inclusion using requirejs */
+            //$scriptBlock = $this->objectManager->create('\Magento\Framework\View\Element\Template');
             //$scriptBlock = $this->context->getLayout()->createBlock('Magento\Framework\View\Element\Template', 'ltc.advancedtemplatehints.script');
-            $scriptBlock->setTemplate('Ltc_AdvancedTemplateHints::script.phtml');
-
-            $this->context->getLayout()->addBlock($scriptBlock,'ltc.advancedtemplatehints.script','before.body.end');
-            $this->logger->debug(get_class($scriptBlock));
-
-            /*if(!$this->context->getLayout()->hasElement('ltc.advancedtemplatehints.scriptC')){
-                $scriptBlock = $this->context->getLayout()->createBlock('Magento\Framework\View\Element\Template', '', ["template" => "Ltc_AdvancedTemplateHints::script.phtml", "after" => "-"]);
-                $this->context->getLayout()->addBlock($scriptBlock,'','before.body.end');
-                $this->logger->debug(get_class($scriptBlock));
-            }*/
+            //$scriptBlock->setTemplate('Ltc_AdvancedTemplateHints::script.phtml');
+            //$this->context->getLayout()->addBlock($scriptBlock,'ltc.advancedtemplatehints.script','before.body.end');
 
 
         }

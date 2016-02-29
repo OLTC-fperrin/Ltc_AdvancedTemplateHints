@@ -65,7 +65,7 @@ class TemplateHints implements \Magento\Framework\View\TemplateEngineInterface
         $blockInfo = $this->helper->getBlockInfo($block);
 
         $wrappedHtml = sprintf(
-            '<div id="tpl-hint-%1$s" class="%2$s">
+            '<div id="tpl-hint-%1$s" class="%2$s" data-mage-init=\'{"ltcath":{}}\'>
                 %3$s
                 <div id="tpl-hint-%1$s-title" style="display: none;">%4$s</div>
                 <div id="tpl-hint-%1$s-infobox" style="display: none;">%5$s</div>

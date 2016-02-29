@@ -37,16 +37,19 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
 
         $info['module'] = $block->getModuleName();
 
-        if ($block instanceof \Magento\Cms\Model\Block) {
-            $info['cms-blockId'] = $block->getIdentifier();
+        if ($block instanceof \Magento\Cms\Model\Block || $block instanceof \Magento\Cms\Block\Widget\Block) {
+            $info['cms-blockId'] = $block->getData('block_id');
         }
+
         if ($block instanceof \Magento\Cms\Model\Page) {
-            $info['cms-pageId'] = $block->getIdentifier(); // Is that working ??
+            $info['cms-pageId'] = $block->getData('page_id'); // Is that working ??
         }
 
         $templateFile = $block->getTemplateFile();
         $info['template'] = $templateFile;
-        //TODO: Add remote call to template file in phpstorm
+        //TODO: add config option
+        $info['template'] = '<a href="http://localhost:8091/?message='.$info['template'].':1">'.$info['template'].'</a>';
+
 
         $info['cache-status'] = self::TYPE_NOTCACHED;
 
@@ -117,9 +120,71 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
     public function renderTitle(array $info) {
         $title = $info['name'];
         if ($info['name'] != $info['alias'] && $info['alias']) {
-            $title .= ' (alias: ' . $info['alias'] . ')';
+            $title .= ' <small>(alias: ' . $info['alias'] . ')</small>';
         }
         return $title;
+    }
+
+    /**
+     * Render box
+     *
+     * @param array $info
+     * @param array $path
+     * @return string
+     */
+    public function renderBox(array $info, array $path) {
+
+        $output = '';
+        $output .= '<dl>';
+        $output .= $this->arrayToDtDd($info, array('name', 'alias'));
+        if (count($path) > 0) {
+            $output .= '<dt>'.__('Block nesting').':</dt><dd>';
+            $output .= '<ul class="path">';
+            foreach ($path as $step) {
+                $output .= '<li>'.$this->renderTitle($step).'</li>';
+            }
+            $output .= '</ul>';
+            $output .= '</dd>';
+        }
+        $output .= '</dl>';
+        return $output;
+    }
+    /**
+     * Render array as <dl>
+     *
+     * @param array $array
+     * @param array $skipKeys
+     * @return string
+     */
+    public function arrayToDtDd(array $array, array $skipKeys=array()) {
+        $output = '<dl>';
+        foreach ($array as $key => $value) {
+            if (in_array($key, $skipKeys)) {
+                continue;
+            }
+            if (is_array($value)) {
+                $value = $this->arrayToDtDd($value);
+            }
+            if (is_int($key)) {
+                $output .= $value . '<br />';
+            } else {
+                $output .= '<dt>'.ucfirst($key).':</dt><dd>';
+                $output .= $value;
+                $output .= '</dd>';
+            }
+        }
+        $output .= '</dl>';
+        return $output;
+    }
+
+    /**
+     * Get CSS class for the hint
+     *
+     * @return string
+     */
+    public function getHintClass()
+    {
+        return 'tpl-hint tpl-hint-border';
     }
 
 }
