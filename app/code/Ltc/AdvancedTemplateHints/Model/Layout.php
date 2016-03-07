@@ -8,10 +8,40 @@ use Psr\Log\LoggerInterface as Logger;
 
 class Layout extends \Magento\Framework\View\Layout implements \Magento\Framework\View\LayoutInterface {
 
+    /**
+     * @var \Magento\Framework\App\Request\Http $request
+     */
     protected $request;
+
+    /**
+     * @var \Magento\Developer\Helper\Data $devHelper
+     */
     protected $devHelper;
+
+    /**
+     * @var bool|mixed $_ath
+     */
     private $_ath = false;
 
+    /**
+     * Layout constructor.
+     *
+     * @param \Magento\Framework\View\Layout\ProcessorFactory $processorFactory
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param \Magento\Framework\View\Layout\Data\Structure $structure
+     * @param MessageManagerInterface $messageManager
+     * @param \Magento\Framework\View\Design\Theme\ResolverInterface $themeResolver
+     * @param \Magento\Framework\View\Layout\ReaderPool $readerPool
+     * @param \Magento\Framework\View\Layout\GeneratorPool $generatorPool
+     * @param \Magento\Framework\Cache\FrontendInterface $cache
+     * @param \Magento\Framework\View\Layout\Reader\ContextFactory $readerContextFactory
+     * @param \Magento\Framework\View\Layout\Generator\ContextFactory $generatorContextFactory
+     * @param AppState $appState
+     * @param Logger $logger
+     * @param \Magento\Developer\Helper\Data $devHelper
+     * @param \Magento\Framework\App\Request\Http $request
+     * @param bool $cacheable
+     */
     public function __construct(
         \Magento\Framework\View\Layout\ProcessorFactory $processorFactory,
         \Magento\Framework\Event\ManagerInterface $eventManager,
@@ -38,7 +68,7 @@ class Layout extends \Magento\Framework\View\Layout implements \Magento\Framewor
     }
 
     /**
-     * Gets HTML of container element
+     * Render container with wrapper for template hints
      *
      * @param string $name
      * @return string
@@ -82,6 +112,27 @@ class Layout extends \Magento\Framework\View\Layout implements \Magento\Framewor
         }
     }
 
+    /**
+     * Render template hints title
+     *
+     * @param array $info
+     * @return string
+     */
+    public function renderTitle(array $info) {
+        $title = $info['name'];
+        if ($info['name'] != $info['alias'] && $info['alias']) {
+            $title .= ' <small>(alias: ' . $info['alias'] . ')</small>';
+        }
+        return $title;
+    }
+
+    /**
+     * Render template hints tooltip content
+     * from info array
+     *
+     * @param array $info
+     * @return string
+     */
     public function renderBox(array $info) {
 
         $output = '';
@@ -91,6 +142,13 @@ class Layout extends \Magento\Framework\View\Layout implements \Magento\Framewor
         return $output;
     }
 
+    /**
+     * Render array to description list HTML
+     *
+     * @param array $array
+     * @param array $skipKeys
+     * @return string
+     */
     public function arrayToDtDd(array $array, array $skipKeys=array()) {
         $output = '<dl>';
         foreach ($array as $key => $value) {
@@ -110,14 +168,6 @@ class Layout extends \Magento\Framework\View\Layout implements \Magento\Framewor
         }
         $output .= '</dl>';
         return $output;
-    }
-
-    public function renderTitle(array $info) {
-        $title = $info['name'];
-        if ($info['name'] != $info['alias'] && $info['alias']) {
-            $title .= ' <small>(alias: ' . $info['alias'] . ')</small>';
-        }
-        return $title;
     }
 
 }

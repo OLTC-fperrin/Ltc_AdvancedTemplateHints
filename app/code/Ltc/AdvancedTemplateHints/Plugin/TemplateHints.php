@@ -9,7 +9,6 @@ class TemplateHints {
      */
     protected $devHelper;
 
-
     /**
      * @var \Ltc\AdvancedTemplateHints\Model\TemplateHintsFactory $templateHintsFactory
      */
@@ -25,22 +24,36 @@ class TemplateHints {
      */
     protected $request;
 
+    /**
+     * @var \Magento\Framework\View\Context $context
+     */
     protected $context;
 
+    /**
+     * @var \Magento\Framework\View\Asset\Repository $assetRepository
+     */
     protected $assetRepository;
 
+    /**
+     * @var \Magento\Framework\View\Asset\GroupedCollection $assetCollection
+     */
     protected $assetCollection;
-    protected $objectManager;
-    private $_count = 0;
 
+    /**
+     * @var bool|mixed $_ath
+     */
     private $_ath = false;
+
     /**
      * TemplateHints constructor.
+     *
      * @param \Magento\Developer\Helper\Data $devHelper
      * @param \Ltc\AdvancedTemplateHints\Model\TemplateHintsFactory $templateHintsFactory
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Magento\Framework\App\Request\Http $request
      * @param \Magento\Framework\View\Context $context
+     * @param \Magento\Framework\View\Asset\Repository $assetRepository,
+     * @param \Magento\Framework\View\Asset\GroupedCollection $assetCollection
      */
     public function __construct(
         \Magento\Developer\Helper\Data $devHelper,
@@ -49,8 +62,7 @@ class TemplateHints {
         \Magento\Framework\App\Request\Http $request,
         \Magento\Framework\View\Context $context,
         \Magento\Framework\View\Asset\Repository $assetRepository,
-        \Magento\Framework\View\Asset\GroupedCollection $assetCollection,
-        \Magento\Framework\ObjectManagerInterface $objectManager
+        \Magento\Framework\View\Asset\GroupedCollection $assetCollection
     ) {
         $this->devHelper = $devHelper;
         $this->templateHintsFactory = $templateHintsFactory;
@@ -59,12 +71,10 @@ class TemplateHints {
         $this->context = $context;
         $this->assetRepository = $assetRepository;
         $this->assetCollection = $assetCollection;
-        $this->objectManager = $objectManager;
 
         $this->_ath = filter_var($this->request->getParam('ath'), FILTER_VALIDATE_BOOLEAN);
 
         if($this->_ath && $this->devHelper->isDevAllowed()) {
-
             /** Adding Module Assets if ath=1 and is allowed */
             /** Adding Opentip native script because not optimized for requirejs */
 
@@ -79,17 +89,16 @@ class TemplateHints {
             $this->assetCollection->add('Ltc_AdvancedTemplateHints/css/opentip', $opentipCss, ['type' => \Magento\Framework\UrlInterface::URL_TYPE_LINK, 'rel' => 'stylesheet', 'media' => 'all']);
             $this->assetCollection->add('Ltc_AdvancedTemplateHints/css/style', $commonCss, ['type' => \Magento\Framework\UrlInterface::URL_TYPE_LINK, 'rel' => 'stylesheet', 'media' => 'all']);
             $this->assetCollection->add('Ltc_AdvancedTemplateHints/js/opentip', $opentipJs, ['type' => \Magento\Framework\UrlInterface::URL_TYPE_JS]);
-
-            /** Removed for proper javascript module inclusion using requirejs */
-            //$scriptBlock = $this->objectManager->create('\Magento\Framework\View\Element\Template');
-            //$scriptBlock = $this->context->getLayout()->createBlock('Magento\Framework\View\Element\Template', 'ltc.advancedtemplatehints.script');
-            //$scriptBlock->setTemplate('Ltc_AdvancedTemplateHints::script.phtml');
-            //$this->context->getLayout()->addBlock($scriptBlock,'ltc.advancedtemplatehints.script','before.body.end');
-
-
         }
     }
 
+    /**
+     * Process template after creation
+     *
+     * @param \Magento\Framework\View\TemplateEngineFactory $subject
+     * @param \Magento\Framework\View\TemplateEngineInterface $invocationResult
+     * @return \Magento\Framework\View\TemplateEngineInterface
+     */
     public function afterCreate(
         \Magento\Framework\View\TemplateEngineFactory $subject,
         \Magento\Framework\View\TemplateEngineInterface $invocationResult

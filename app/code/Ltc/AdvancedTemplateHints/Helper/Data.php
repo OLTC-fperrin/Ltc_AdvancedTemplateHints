@@ -8,14 +8,29 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
     const TYPE_NOTCACHED = 'notcached';
     const TYPE_IMPLICITLYCACHED = 'implicitlycached';
 
+    /**
+     * @var \Magento\Framework\View\LayoutInterface $layout
+     */
     protected $layout;
 
+    /**
+     * Data constructor.
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param \Magento\Framework\View\LayoutInterface $layout
+     */
     public function __construct(\Magento\Framework\App\Helper\Context $context, \Magento\Framework\View\LayoutInterface $layout)
     {
         $this->layout = $layout;
         parent::__construct($context);
     }
 
+    /**
+     * Retrieve block's info
+     *
+     * @param \Magento\Framework\View\Element\BlockInterface $block
+     * @param bool $fullInfo
+     * @return array
+     */
     public function getBlockInfo(
         \Magento\Framework\View\Element\BlockInterface $block,
         $fullInfo = true
@@ -33,8 +48,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
 
         $info['class'] = get_class($block);
 
-        //TODO: Add remote call to class file in phpstorm
-
         $info['module'] = $block->getModuleName();
 
         if ($block instanceof \Magento\Cms\Model\Block || $block instanceof \Magento\Cms\Block\Widget\Block) {
@@ -47,9 +60,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
 
         $templateFile = $block->getTemplateFile();
         $info['template'] = $templateFile;
-        //TODO: add config option
-        $info['template'] = '<a href="http://localhost:8091/?message='.$info['template'].':1">'.$info['template'].'</a>';
 
+        /**
+         * Remote call to PhpStorm
+         * TODO: add config options for remote call method
+         */
+        $info['template'] = '<a href="http://localhost:8091/?message='.$info['template'].':1">'.$info['template'].'</a>';
 
         $info['cache-status'] = self::TYPE_NOTCACHED;
 
@@ -78,8 +94,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
      *
      * @param \Magento\Framework\View\Element\BlockInterface $block
      * @return string
-     * @author Fabrizio Branca
-     * @since 2011-01-24
      */
     public function getBlockPath(\Magento\Framework\View\Element\BlockInterface $block) {
         $blockPath = array();
@@ -149,8 +163,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper {
         $output .= '</dl>';
         return $output;
     }
+
     /**
-     * Render array as <dl>
+     * Render array as description list HTML
      *
      * @param array $array
      * @param array $skipKeys

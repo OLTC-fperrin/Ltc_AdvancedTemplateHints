@@ -1,10 +1,5 @@
 <?php
-/**
- * Copyright © 2016 ONLY Lyon Tourism et congrès. All rights reserved.
- * Created by fperrin
- * 10/2/16 10:30
- */
- 
+
 namespace Ltc\AdvancedTemplateHints\Model;
 
 class TemplateHints implements \Magento\Framework\View\TemplateEngineInterface
@@ -26,7 +21,11 @@ class TemplateHints implements \Magento\Framework\View\TemplateEngineInterface
     protected $helper;
 
     /**
-     * @param \Magento\Framework\View\TemplateEngineInterface
+     * TemplateHints constructor.
+     *
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\View\TemplateEngineInterface $subject
+     * @param \Ltc\AdvancedTemplateHints\Helper\Data $helper
      */
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
@@ -42,8 +41,7 @@ class TemplateHints implements \Magento\Framework\View\TemplateEngineInterface
     /**
      * Render template
      *
-     * Render the named template in the context of a particular block and with
-     * the data provided in $vars.
+     * Render template with wrapper for template hints
      *
      * @param \Magento\Framework\View\Element\BlockInterface $block
      * @param string $templateFile
@@ -54,8 +52,7 @@ class TemplateHints implements \Magento\Framework\View\TemplateEngineInterface
         \Magento\Framework\View\Element\BlockInterface $block,
         $templateFile,
         array $dictionary = []
-    )
-    {
+    ) {
         $blockContent = $this->_subject->render($block, $templateFile, $dictionary);
 
         $id = uniqid();
@@ -76,7 +73,6 @@ class TemplateHints implements \Magento\Framework\View\TemplateEngineInterface
             $this->helper->renderTitle($blockInfo),
             $this->helper->renderBox($blockInfo, $path)
         );
-
 
         return $wrappedHtml;
     }
